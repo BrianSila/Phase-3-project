@@ -65,26 +65,29 @@ def filter(restriction):
 	click.echo(f"{restriction.capitalize()} recipes:")
 	for recipe in recipes:
 		click.echo(f"{recipe.id}: {recipe.name}")
-
+# ...existing code...
 @cli.command()
-@click.argument('recipe_id', type=int)
-def details(recipe_id):
-	"""Show detailed recipe information"""
-	recipe = get_recipe_details(recipe_id)
-	if not recipe:
-		click.echo(f"Recipe with ID {recipe_id} not found.")
-		return
-	
-	click.echo(f"\nRecipe: {recipe['name']}")
-	click.echo(f"Prep time: {recipe['prep_time']}")
-	click.echo(f"Dietary restrictions: {recipe['dietary_restrictions']}")
-	
-	click.echo("\nIngredients:")
-	for ing in recipe['ingredients']:
-		click.echo(f"- {ing['quantity']} {ing['unit']} {ing['name']}")
-	
-	click.echo("\nInstructions:")
-	click.echo(recipe['instructions'])
+@click.argument('recipe_id', type=int, required=False)
+def details(recipe_id=None):
+    """Show detailed recipe information"""
+    if recipe_id is None:
+        recipe_id = click.prompt("Please enter the recipe ID", type=int)
+    recipe = get_recipe_details(recipe_id)
+    if not recipe:
+        click.echo(f"Recipe with ID {recipe_id} not found.")
+        return
+    
+    click.echo(f"\nRecipe: {recipe['name']}")
+    click.echo(f"Prep time: {recipe['prep_time']}")
+    click.echo(f"Dietary restrictions: {recipe['dietary_restrictions']}")
+    
+    click.echo("\nIngredients:")
+    for ing in recipe['ingredients']:
+        click.echo(f"- {ing['quantity']} {ing['unit']} {ing['name']}")
+    
+    click.echo("\nInstructions:")
+    click.echo(recipe['instructions'])
+# ...existing code...
 
 if __name__ == '__main__':
 	cli()
